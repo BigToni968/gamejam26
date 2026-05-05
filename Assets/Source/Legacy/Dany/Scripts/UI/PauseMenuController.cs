@@ -14,12 +14,6 @@ namespace Dany
         //Singelton
         private MonoUpdater _monoUpdater;
 
-        private void Awake()
-        {
-            if (windowMenu == null)
-                windowMenu = FindFirstObjectByType<UI_WindowMenu>();
-        }
-
         private void Start()
         {
             _monoUpdater = MonoUpdater.Instance;
@@ -48,9 +42,6 @@ namespace Dany
             Cursor.visible = true;
             RuntimeManager.PauseAllEvents(true);
         }
-
-        /// <summary>Для кнопки «Продолжить» (UnityEvent) — снять паузу и вернуться в игру.</summary>
-        public void ContinuePlaying() => Resume();
 
         /// <summary>Снять паузу (ESC или кнопка).</summary>
         public void Resume()

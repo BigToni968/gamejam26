@@ -2,8 +2,8 @@ using SiberianGJ26.YouAreDoing.Antos.Abstraction;
 using SiberianGJ26.YouAreDoing.Antos.Readonly;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using Dany;
 using TMPro;
+using Dany;
 
 namespace SiberianGJ26.YouAreDoing.Antos.UI
 {
@@ -19,13 +19,10 @@ namespace SiberianGJ26.YouAreDoing.Antos.UI
 
         private void Start()
         {
-            if (data != null)
-            {
-                labelPlayButton.SetText(data.GetPlayTextToScene(SceneManager.GetActiveScene().buildIndex));
-                labelExitButton.SetText(data.GetExitTextToScene(SceneManager.GetActiveScene().buildIndex));
-                if (IsCurentScene(data.MenuSceneIndex))
-                    UnlockCursorForMenu();
-            }
+            labelPlayButton.SetText(data.GetPlayTextToScene(SceneManager.GetActiveScene().buildIndex)); 
+            labelExitButton.SetText(data.GetExitTextToScene(SceneManager.GetActiveScene().buildIndex));
+            if (IsCurentSceneMenu())
+                UnlockCursorForMenu();
         }
 
         private static void UnlockCursorForMenu()
@@ -49,40 +46,19 @@ namespace SiberianGJ26.YouAreDoing.Antos.UI
         public void Play()
         {
             if (data == null) return;
-            if (IsCurentScene(data.LevelSceneIndex))
+            if (!IsCurentSceneMenu())
             {
-                ContinueGameplayFromPause();
+                pauseMenuController?.Resume();
+                Hide();
                 return;
             }
 
             SceneManager.LoadScene(data.LevelSceneIndex);
         }
 
-        /// <summary>
-        /// Кнопка «Продолжить»: на сцене уровня — снять паузу и скрыть окно; на сцене меню — загрузить уровень (как «Играть»).
-        /// Повесь OnClick на этот метод.
-        /// </summary>
-        public void ContinueGame()
-        {
-            if (data == null) return;
-            if (IsCurentScene(data.LevelSceneIndex))
-                ContinueGameplayFromPause();
-            else
-                SceneManager.LoadScene(data.LevelSceneIndex);
-        }
-
-        private void ContinueGameplayFromPause()
-        {
-            var pause = pauseMenuController != null
-                ? pauseMenuController
-                : FindFirstObjectByType<PauseMenuController>();
-            pause?.Resume();
-            Hide();
-        }
-
         public void Exit()
         {
-            if (IsCurentScene(data.MenuSceneIndex))
+            if (IsCurentSceneMenu())
             {
                 Application.Quit();
                 return;
@@ -91,9 +67,9 @@ namespace SiberianGJ26.YouAreDoing.Antos.UI
             SceneManager.LoadScene(data.MenuSceneIndex);
         }
 
-        private bool IsCurentScene(int indexScene)
+        private bool IsCurentSceneMenu()
         {
-            return SceneManager.GetActiveScene().buildIndex == indexScene;
+            return SceneManager.GetActiveScene().buildIndex == data.MenuSceneIndex;
         }
     }
 }
